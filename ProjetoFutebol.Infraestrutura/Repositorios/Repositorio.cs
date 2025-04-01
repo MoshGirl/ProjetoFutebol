@@ -31,6 +31,12 @@ namespace ProjetoFutebol.Infraestrutura.Repositorios
             return Task.FromResult(true);
         }
 
+        public async Task AdicionarEmLoteAsync(IEnumerable<T> entidades)
+        {
+            await _context.Set<T>().AddRangeAsync(entidades);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<T?> ObterPorIdAsync(int id)
         {
             return await _context.Set<T>().FindAsync(id);

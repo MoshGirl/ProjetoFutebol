@@ -3,29 +3,47 @@ using ProjetoFutebol.Aplicacao.Servicos;
 
 namespace ProjetoFutebol.WebAPI.Controllers
 {
-    [Route("api/FutebolAPI")]
+    [Route("api/Futebol")]
     [ApiController]
     public class FutebolController : ControllerBase
     {
         private readonly ApiFutebolService _apiFutebolService;
+        private readonly ILogger<FutebolController> _logger;
 
-        public FutebolController(ApiFutebolService apiFutebolService)
+        public FutebolController(ApiFutebolService apiFutebolService, ILogger<FutebolController> logger)
         {
             _apiFutebolService = apiFutebolService;
+            _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("Areas")]
         public async Task<IActionResult> ObterAreas()
         {
-            var data = await _apiFutebolService.ObterAreasAsync();
-            return Ok(data);
+            try
+            {
+                var data = await _apiFutebolService.ObterAreasAsync();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter áreas.");
+                return StatusCode(500, "Erro interno no servidor.");
+            }
         }
 
-        [HttpGet]
+        [HttpGet("Competicoes")]
         public async Task<IActionResult> ObterCompeticoes()
         {
-            var data = await _apiFutebolService.ObterCompeticoesAsync();
-            return Ok(data);
+            try
+            {
+                var data = await _apiFutebolService.ObterCompeticoesAsync();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter competições.");
+                return StatusCode(500, "Erro interno no servidor.");
+            }
         }
     }
 }

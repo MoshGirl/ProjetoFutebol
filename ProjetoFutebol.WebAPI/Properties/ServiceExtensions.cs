@@ -3,6 +3,8 @@ using ProjetoFutebol.Aplicacao.Servicos;
 using ProjetoFutebol.Dominio.Interfaces;
 using ProjetoFutebol.Infraestrutura.Repositorios;
 using ProjetoFutebol.Infraestrutura;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace ProjetoFutebol.WebAPI.Properties
 {
@@ -22,7 +24,26 @@ namespace ProjetoFutebol.WebAPI.Properties
 
             // Configuração do Swagger
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Projeto Futebol API",
+                    Version = "v1",
+                    Description = "API para gerenciamento de competições de futebol.",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Anna Carollyne",
+                        Email = "anna11bra@gmail.com",
+                        Url = new Uri("https://github.com/MoshGirl")
+                    }
+                });
+
+                // Adiciona suporte a comentários XML
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             // Configuração do CORS
             services.AddCors(options =>
