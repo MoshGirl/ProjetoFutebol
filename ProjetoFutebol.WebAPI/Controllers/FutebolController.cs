@@ -15,7 +15,7 @@ namespace ProjetoFutebol.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> TestarApi()
+        public async Task<IActionResult> ObterAreas()
         {
             var data = await _apiFutebolService.ObterAreasAsync();
             return Ok(data);
