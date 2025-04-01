@@ -3,7 +3,7 @@ using ProjetoFutebol.Aplicacao.Servicos;
 
 namespace ProjetoFutebol.WebAPI.Controllers
 {
-    [Route("api/teste")]
+    [Route("api/FutebolAPI")]
     [ApiController]
     public class FutebolController : ControllerBase
     {
@@ -18,6 +18,13 @@ namespace ProjetoFutebol.WebAPI.Controllers
         public async Task<IActionResult> ObterAreas()
         {
             var data = await _apiFutebolService.ObterAreasAsync();
+            return Ok(data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ObterCompeticoes()
+        {
+            var data = await _apiFutebolService.ObterCompeticoesAsync();
             return Ok(data);
         }
     }

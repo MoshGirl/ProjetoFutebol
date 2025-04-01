@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ProjetoFutebol.Dominio.DTOs;
+using ProjetoFutebol.Dominio.Interfaces;
 using System.Text.Json;
 
 namespace ProjetoFutebol.Aplicacao.Servicos
 {
-    public class ApiFutebolService
+    public class ApiFutebolService : IApiFutebolService
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiBaseUrl;
@@ -15,7 +16,7 @@ namespace ProjetoFutebol.Aplicacao.Servicos
             _httpClient = httpClient;
             _apiBaseUrl = configuration["ApiFutebol:BaseUrl"];
             _authToken = configuration["ApiFutebol:AuthToken"];
-        }
+        }                
 
         public async Task<string> GetDataFromApiAsync(string endpoint)
         {
@@ -32,16 +33,72 @@ namespace ProjetoFutebol.Aplicacao.Servicos
             return $"Erro: {response.StatusCode}";
         }
 
+        public async Task<T> GetAsync<T>(string endpoint)
+        {
+            try
+            {
+                string jsonResponse = await GetDataFromApiAsync(endpoint);
+                if (string.IsNullOrEmpty(jsonResponse))
+                    return default(T);
+
+                return JsonSerializer.Deserialize<T>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Erro ao desserializar JSON: {ex.Message}");
+                return default;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Erro na requisição HTTP: {ex.Message}");
+                return default;
+            }
+        }
+
         public async Task<AreasDTO> ObterAreasAsync()
         {
-            string jsonResponse = await GetDataFromApiAsync("areas");
+            try
+            {
+                string jsonResponse = await GetDataFromApiAsync("areas");
 
-            if (string.IsNullOrEmpty(jsonResponse))
-                return new AreasDTO();
+                if (string.IsNullOrEmpty(jsonResponse))
+                    return new AreasDTO();
 
-            var teste = JsonSerializer.Deserialize<AreasDTO>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                return JsonSerializer.Deserialize<AreasDTO>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Erro ao desserializar JSON: {ex.Message}");
+                return default;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Erro na requisição HTTP: {ex.Message}");
+                return default;
+            }
+        }
 
-            return JsonSerializer.Deserialize<AreasDTO>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        public async Task<CompeticoesDTO> ObterCompeticoesAsync()
+        {
+            try
+            {
+                string jsonResponse = await GetDataFromApiAsync("competitions");
+
+                if (string.IsNullOrEmpty(jsonResponse))
+                    return new CompeticoesDTO();
+
+                return JsonSerializer.Deserialize<CompeticoesDTO>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            catch (JsonException ex)
+            {
+                Console.WriteLine($"Erro ao desserializar JSON: {ex.Message}");
+                return default;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"Erro na requisição HTTP: {ex.Message}");
+                return default;
+            }
         }
     }
 }
