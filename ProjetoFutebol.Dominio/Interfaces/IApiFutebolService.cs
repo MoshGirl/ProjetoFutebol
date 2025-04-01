@@ -2,6 +2,6 @@
 {
     public interface IApiFutebolService
     {
-        Task<T> GetAsync<T>(string endpoint);
+        Task<T> ObterDadosAsync<T>(string endpoint, string? parametro = null);
     }
 }

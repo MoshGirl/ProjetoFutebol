@@ -33,61 +33,21 @@ namespace ProjetoFutebol.Aplicacao.Servicos
             return $"Erro: {response.StatusCode}";
         }
 
-        public async Task<T> GetAsync<T>(string endpoint)
+        public async Task<T> ObterDadosAsync<T>(string endpoint, string? parametro = null)
         {
             try
             {
+                if (!string.IsNullOrEmpty(parametro))
+                {
+                    endpoint = $"{endpoint}/{parametro}";
+                }
+
                 string jsonResponse = await GetDataFromApiAsync(endpoint);
+
                 if (string.IsNullOrEmpty(jsonResponse))
-                    return default(T);
+                    return default;
 
                 return JsonSerializer.Deserialize<T>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine($"Erro ao desserializar JSON: {ex.Message}");
-                return default;
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"Erro na requisição HTTP: {ex.Message}");
-                return default;
-            }
-        }
-
-        public async Task<AreasDTO> ObterAreasAsync()
-        {
-            try
-            {
-                string jsonResponse = await GetDataFromApiAsync("areas");
-
-                if (string.IsNullOrEmpty(jsonResponse))
-                    return new AreasDTO();
-
-                return JsonSerializer.Deserialize<AreasDTO>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            }
-            catch (JsonException ex)
-            {
-                Console.WriteLine($"Erro ao desserializar JSON: {ex.Message}");
-                return default;
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"Erro na requisição HTTP: {ex.Message}");
-                return default;
-            }
-        }
-
-        public async Task<CompeticoesDTO> ObterCompeticoesAsync()
-        {
-            try
-            {
-                string jsonResponse = await GetDataFromApiAsync("competitions");
-
-                if (string.IsNullOrEmpty(jsonResponse))
-                    return new CompeticoesDTO();
-
-                return JsonSerializer.Deserialize<CompeticoesDTO>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             }
             catch (JsonException ex)
             {
