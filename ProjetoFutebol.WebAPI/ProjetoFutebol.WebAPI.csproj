@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ProjetoFutebol.Aplicacao\ProjetoFutebol.Aplicacao.csproj" />
     <ProjectReference Include="..\ProjetoFutebol.Infraestrutura\ProjetoFutebol.Infraestrutura.csproj" />
   </ItemGroup>
 
