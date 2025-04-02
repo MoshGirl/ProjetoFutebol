@@ -1,13 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjetoFutebol.Aplicacao.Servicos;
-using ProjetoFutebol.Aplicacao.Extensions;
-using ProjetoFutebol.Dominio.Interfaces;
-using ProjetoFutebol.Infraestrutura.Repositorios;
-using ProjetoFutebol.Infraestrutura;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using ProjetoFutebol.Aplicacao.Extensions;
+using ProjetoFutebol.Aplicacao.Servicos;
+using ProjetoFutebol.Dominio.Interfaces;
+using ProjetoFutebol.Infraestrutura;
+using ProjetoFutebol.Infraestrutura.Repositorios;
+using System.Reflection;
 using System.Text;
 
 namespace ProjetoFutebol.WebAPI.Properties
@@ -69,6 +69,33 @@ namespace ProjetoFutebol.WebAPI.Properties
                         Url = new Uri("https://github.com/MoshGirl")
                     }
                 });
+
+                // Configurar autenticação JWT no Swagger
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Insira o token JWT no formato: Bearer {seu_token}"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                     {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+                     }
+                });
+
 
                 // Adiciona suporte a comentários XML
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
