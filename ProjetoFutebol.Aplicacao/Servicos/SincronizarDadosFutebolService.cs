@@ -10,15 +10,17 @@ namespace ProjetoFutebol.Aplicacao.Servicos
     {
         private readonly IApiFutebolService _apiFutebolService;
         private readonly IPaisService _paisService;
-        private readonly IRepository<Pais> _repositorioPais;
+        private readonly ICompeticaoService _competicaoService;
         private readonly ILogger<SincronizarDadosFutebolService> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SincronizarDadosFutebolService(IApiFutebolService apiFutebolService, IPaisService paisService, IRepository<Pais> repositorioPais, ILogger<SincronizarDadosFutebolService> logger)
+        public SincronizarDadosFutebolService(IApiFutebolService apiFutebolService, IPaisService paisService, ILogger<SincronizarDadosFutebolService> logger, IUnitOfWork unitOfWork, ICompeticaoService competicaoService)
         {
             _apiFutebolService = apiFutebolService;
             _paisService = paisService;
-            _repositorioPais = repositorioPais;
             _logger = logger;
+            _unitOfWork = unitOfWork;
+            _competicaoService = competicaoService;
         }
 
         public async Task<int> SincronizarPaisesAsync()
@@ -31,13 +33,38 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                     return 0;
 
                 var paises = _paisService.ConverterAreasParaPaises(areasDto);
-                await _repositorioPais.AdicionarEmLoteAsync(paises);
+
+                await _paisService.AdicionarEmLoteAsync(paises);
+                await _unitOfWork.CommitAsync();
 
                 return paises.Count;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro ao sincronizar países.");
+                throw;
+            }
+        }
+
+        public async Task<int> SincronizarCompeticaoPorPaises()
+        {
+            try
+            {
+                var competicoesDto = await _apiFutebolService.ObterDadosAsync<CompeticoesDTO>("competitions");
+
+                if (competicoesDto?.competitions == null || !competicoesDto.competitions.Any())
+                    return 0;
+
+                List<Competicao> competicoes = await _competicaoService.ConverterCompeticoes(competicoesDto);
+
+                await _competicaoService.AdicionarEmLoteAsync(competicoes);
+                await _unitOfWork.CommitAsync();
+
+                return competicoes.Count;
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }
@@ -51,7 +78,7 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                 if (timesDto?.teams == null || !timesDto.teams.Any())
                     return 0;
 
-
+                return default(int);
             }
             catch (Exception)
             {

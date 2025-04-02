@@ -5,6 +5,7 @@ namespace ProjetoFutebol.Dominio.Interfaces.EntidadesInterface
 {
     public interface IPaisService
     {
+        Task AdicionarEmLoteAsync(List<Pais> paises);
         List<Pais> ConverterAreasParaPaises(AreasDTO areasDto);
     }
 }

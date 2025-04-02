@@ -1,4 +1,6 @@
+using ProjetoFutebol.Aplicacao.Extensions;
 using ProjetoFutebol.WebAPI.Properties;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ProjetoFutebol.Dominio.DTOs;
+using ProjetoFutebol.Dominio.Entidades;
 
 namespace ProjetoFutebol.Dominio.Interfaces.EntidadesInterface
 {
     public interface ICompeticaoService
     {
+        Task<List<Competicao>> ConverterCompeticoes(CompeticoesDTO competicoesDto);
+        Task AdicionarEmLoteAsync(List<Competicao> competicoes);
     }
 }

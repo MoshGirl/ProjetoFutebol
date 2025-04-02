@@ -31,10 +31,35 @@ namespace ProjetoFutebol.Infraestrutura.Repositorios
             return Task.FromResult(true);
         }
 
-        public async Task AdicionarEmLoteAsync(IEnumerable<T> entidades)
+        public async Task AdicionarEmLoteAsync<T>(IEnumerable<T> entidades) where T : class
         {
-            await _context.Set<T>().AddRangeAsync(entidades);
-            await _context.SaveChangesAsync();
+            var set = _context.Set<T>();
+
+            var idProperty = typeof(T).GetProperties().FirstOrDefault(p => p.Name.EndsWith("ID", StringComparison.OrdinalIgnoreCase));
+
+            if (idProperty == null)
+                throw new InvalidOperationException($"A entidade {typeof(T).Name} não possui uma propriedade de ID.");
+
+            var ids = entidades.Select(e => idProperty.GetValue(e)).ToList();
+
+            var idsExistentes = await set
+                .Where(e => ids.Contains(EF.Property<object>(e, idProperty.Name)))
+                .Select(e => EF.Property<object>(e, idProperty.Name))
+                .ToListAsync();
+
+            var novasEntidades = entidades
+                .Where(e => !idsExistentes.Contains(idProperty.GetValue(e)))
+                .ToList();
+
+            foreach (var entidade in novasEntidades)
+            {
+                idProperty.SetValue(entidade, null);
+            }
+
+            if (novasEntidades.Any())
+            {
+                await set.AddRangeAsync(novasEntidades);
+            }
         }
 
         public async Task<T?> ObterPorIdAsync(int id)

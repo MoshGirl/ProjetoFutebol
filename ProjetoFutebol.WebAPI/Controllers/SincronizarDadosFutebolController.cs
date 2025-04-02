@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjetoFutebol.Aplicacao.Servicos;
-using ProjetoFutebol.Dominio.DTOs;
-using ProjetoFutebol.Dominio.Entidades;
 using ProjetoFutebol.Dominio.Interfaces;
 
 namespace ProjetoFutebol.WebAPI.Controllers
@@ -26,6 +23,21 @@ namespace ProjetoFutebol.WebAPI.Controllers
             {
                 int total = await _sincronizacaoService.SincronizarPaisesAsync();
                 return Ok(new { mensagem = "Paises sincronizados com sucesso!", total });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao sincronizar países.");
+                return StatusCode(500, "Erro interno no servidor.");
+            }
+        }
+
+        [HttpPost("sincronizar-competicoes")]
+        public async Task<IActionResult> SincronizarCompeticoes()
+        {
+            try
+            {
+                int total = await _sincronizacaoService.SincronizarCompeticaoPorPaises();
+                return Ok(new { mensagem = "Competições sincronizados com sucesso!", total });
             }
             catch (Exception ex)
             {

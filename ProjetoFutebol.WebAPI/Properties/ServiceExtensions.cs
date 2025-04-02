@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjetoFutebol.Aplicacao.Servicos;
+using ProjetoFutebol.Aplicacao.Extensions;
 using ProjetoFutebol.Dominio.Interfaces;
 using ProjetoFutebol.Infraestrutura.Repositorios;
 using ProjetoFutebol.Infraestrutura;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using ProjetoFutebol.Aplicacao.Servicos.EntidadesService;
+using ProjetoFutebol.Dominio.Interfaces.EntidadesInterface;
 
 namespace ProjetoFutebol.WebAPI.Properties
 {
@@ -17,6 +20,12 @@ namespace ProjetoFutebol.WebAPI.Properties
 
             // Injeção de Dependência
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddApplicationServices(Assembly.GetExecutingAssembly());
+            services.AddApplicationServices();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IApiFutebolService, ApiFutebolService>();
+            //services.AddScoped<ISincronizarDadosFutebolService, SincronizarDadosFutebolService>();
+            //services.AddScoped<IPaisService, PaisService>();
 
             // Configuração do banco de dados
             services.AddDbContext<ProjetoFutebolDbContext>(options =>

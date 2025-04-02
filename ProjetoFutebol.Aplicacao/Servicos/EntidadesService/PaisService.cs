@@ -1,5 +1,6 @@
 ﻿using ProjetoFutebol.Dominio.DTOs;
 using ProjetoFutebol.Dominio.Entidades;
+using ProjetoFutebol.Dominio.Interfaces;
 using ProjetoFutebol.Dominio.Interfaces.EntidadesInterface;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,16 @@ namespace ProjetoFutebol.Aplicacao.Servicos.EntidadesService
 {
     public class PaisService : IPaisService
     {
-        public PaisService()
-        {
+        private readonly IRepository<Pais> _repositorioPais;
 
+        public PaisService(IRepository<Pais> repositorioPais)
+        {
+            _repositorioPais = repositorioPais;
+        }
+
+        public async Task AdicionarEmLoteAsync(List<Pais> paises)
+        {
+            await _repositorioPais.AdicionarEmLoteAsync(paises);
         }
 
         public List<Pais> ConverterAreasParaPaises(AreasDTO areasDto)
