@@ -5,6 +5,7 @@ using ProjetoFutebol.Dominio.Entidades;
 using ProjetoFutebol.Dominio.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ProjetoFutebol.Aplicacao.Servicos
@@ -36,11 +37,10 @@ namespace ProjetoFutebol.Aplicacao.Servicos
             return HashSenha(senha) == senhaHash;
         }
 
-        public async Task<string> GerarTokenAsync(Usuario usuario)
+        public async Task<(string token, string refreshToken)> GerarTokenAsync(Usuario usuario)
         {
             var chaveSecreta = _config["Jwt:SecretKey"];
             var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(chaveSecreta));
-
             var credenciais = new SigningCredentials(chave, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -54,10 +54,17 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                 _config["Jwt:Issuer"],
                 _config["Jwt:Audience"],
                 claims,
-                expires: DateTime.UtcNow.AddHours(2),
+                expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: credenciais);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+            var refreshToken = GerarRefreshToken();
+
+            usuario.AtualizaRefreshToken(refreshToken, 7);
+            await _usuarioRepository.AtualizarAsync(usuario);
+            await _unitOfWork.CommitAsync();
+
+            return (jwtToken, refreshToken);
         }
 
         public async Task<Usuario> RegistrarUsuarioAsync(string nome, string email, string senha)
@@ -91,6 +98,11 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                 prf: KeyDerivationPrf.HMACSHA256,
                 iterationCount: 10000,
                 numBytesRequested: 256 / 8));
+        }
+
+        private static string GerarRefreshToken()
+        {
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
         }
     }
 }

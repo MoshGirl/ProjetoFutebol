@@ -9,10 +9,12 @@ namespace ProjetoFutebol.WebAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IRepository<Usuario> _usuarioRepository;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IRepository<Usuario> usuarioRepository)
         {
             _authService = authService;
+            _usuarioRepository = usuarioRepository;
         }
 
         [HttpPost("registrar")]
@@ -39,6 +41,21 @@ namespace ProjetoFutebol.WebAPI.Controllers
 
             var token = await _authService.GerarTokenAsync(usuario);
             return Ok(new { token });
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        {
+            var usuario = (await _usuarioRepository.BuscarAsync(u => u.RefreshToken == request.RefreshToken)).FirstOrDefault();
+
+            if (usuario == null || usuario.RefreshTokenExpiracao < DateTime.UtcNow)
+            {
+                return Unauthorized("Refresh Token inválido ou expirado.");
+            }
+
+            var (novoToken, novoRefreshToken) = await _authService.GerarTokenAsync(usuario);
+
+            return Ok(new { token = novoToken, refreshToken = novoRefreshToken });
         }
     }
 }

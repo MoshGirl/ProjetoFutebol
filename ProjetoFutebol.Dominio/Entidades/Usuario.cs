@@ -11,7 +11,7 @@ namespace ProjetoFutebol.Dominio.Entidades
             SenhaHash = senhaHash;
         }
 
-        public int UsuarioID { get; set; }
+        public Guid UsuarioID { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -24,5 +24,14 @@ namespace ProjetoFutebol.Dominio.Entidades
 
         [Required]
         public string SenhaHash { get; set; }
+
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiracao { get; set; }
+
+        public void AtualizaRefreshToken(string refreshToken, int diasExpiracao)
+        {
+            RefreshToken = refreshToken;
+            RefreshTokenExpiracao = DateTime.UtcNow.AddDays(diasExpiracao);
+        }
     }
 }
