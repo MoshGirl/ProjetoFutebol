@@ -1,6 +1,6 @@
 ﻿using ProjetoFutebol.Dominio.DTOs;
 using ProjetoFutebol.Dominio.Entidades;
-using ProjetoFutebol.Dominio.Interfaces;
+using ProjetoFutebol.Dominio.Interfaces.EntidadesInterface;
 using System;
 using System.Collections.Generic;
 using System.Linq;

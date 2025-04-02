@@ -1,7 +1,7 @@
 ﻿using ProjetoFutebol.Dominio.DTOs;
 using ProjetoFutebol.Dominio.Entidades;
 
-namespace ProjetoFutebol.Dominio.Interfaces
+namespace ProjetoFutebol.Dominio.Interfaces.EntidadesInterface
 {
     public interface IPaisService
     {

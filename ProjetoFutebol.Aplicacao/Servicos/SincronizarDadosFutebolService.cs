@@ -2,6 +2,7 @@
 using ProjetoFutebol.Dominio.Entidades;
 using ProjetoFutebol.Dominio.Interfaces;
 using Microsoft.Extensions.Logging;
+using ProjetoFutebol.Dominio.Interfaces.EntidadesInterface;
 
 namespace ProjetoFutebol.Aplicacao.Servicos
 {
@@ -37,6 +38,24 @@ namespace ProjetoFutebol.Aplicacao.Servicos
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro ao sincronizar países.");
+                throw;
+            }
+        }
+
+        public async Task<int> SincronizarTimesPorCompeticao(string codigoCompeticao)
+        {
+            try
+            {
+                var timesDto = await _apiFutebolService.ObterDadosAsync<TimesCompeticaoDTO>("competitions", codigoCompeticao + "/teams");
+
+                if (timesDto?.teams == null || !timesDto.teams.Any())
+                    return 0;
+
+
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }
