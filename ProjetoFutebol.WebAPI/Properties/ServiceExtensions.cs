@@ -6,13 +6,34 @@ using ProjetoFutebol.Infraestrutura.Repositorios;
 using ProjetoFutebol.Infraestrutura;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using ProjetoFutebol.Aplicacao.Servicos.EntidadesService;
-using ProjetoFutebol.Dominio.Interfaces.EntidadesInterface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ProjetoFutebol.WebAPI.Properties
 {
     public static class ServiceExtensions
     {
+        public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            var chaveSecreta = Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"]);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = configuration["Jwt:Issuer"],
+                        ValidAudience = configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(chaveSecreta)
+                    };
+                });
+        }
+
         public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllers();
@@ -22,6 +43,7 @@ namespace ProjetoFutebol.WebAPI.Properties
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddApplicationServices(Assembly.GetExecutingAssembly());
             services.AddApplicationServices();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             //services.AddScoped<IApiFutebolService, ApiFutebolService>();
             //services.AddScoped<ISincronizarDadosFutebolService, SincronizarDadosFutebolService>();

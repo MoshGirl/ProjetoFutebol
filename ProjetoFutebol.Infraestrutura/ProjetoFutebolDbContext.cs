@@ -16,6 +16,7 @@ namespace ProjetoFutebol.Infraestrutura
         public DbSet<Pais> Pais { get; set; }
         public DbSet<Partida> Partida { get; set; }
         public DbSet<Placar> Placar { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +26,7 @@ namespace ProjetoFutebol.Infraestrutura
             modelBuilder.ApplyConfiguration(new PaisMap());
             modelBuilder.ApplyConfiguration(new PartidaMap());
             modelBuilder.ApplyConfiguration(new PlacarMap());
+            modelBuilder.ApplyConfiguration(new UsuarioMap());
 
             base.OnModelCreating(modelBuilder);
         }
