@@ -9,6 +9,7 @@ namespace ProjetoFutebol.Dominio.Interfaces
         Task<bool> RemoverAsync(T entidade);
         Task AdicionarEmLoteAsync<T>(IEnumerable<T> entidades) where T : class;
         Task<T?> ObterPorIdAsync(int id);
+        Task<T?> ObterPorCodigoAsync(string codigo);
         Task<IEnumerable<T>> ObterTodosAsync();
         Task<IEnumerable<T>> BuscarAsync(Expression<Func<T, bool>> filtro);
     }

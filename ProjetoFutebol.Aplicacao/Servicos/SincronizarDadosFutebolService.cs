@@ -11,16 +11,18 @@ namespace ProjetoFutebol.Aplicacao.Servicos
         private readonly IApiFutebolService _apiFutebolService;
         private readonly IPaisService _paisService;
         private readonly ICompeticaoService _competicaoService;
+        private readonly IEquipeService _equipeService;
         private readonly ILogger<SincronizarDadosFutebolService> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
-        public SincronizarDadosFutebolService(IApiFutebolService apiFutebolService, IPaisService paisService, ILogger<SincronizarDadosFutebolService> logger, IUnitOfWork unitOfWork, ICompeticaoService competicaoService)
+        public SincronizarDadosFutebolService(IApiFutebolService apiFutebolService, IPaisService paisService, ILogger<SincronizarDadosFutebolService> logger, IUnitOfWork unitOfWork, ICompeticaoService competicaoService, IEquipeService equipeService)
         {
             _apiFutebolService = apiFutebolService;
             _paisService = paisService;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _competicaoService = competicaoService;
+            _equipeService = equipeService;
         }
 
         public async Task<int> SincronizarPaisesAsync()
@@ -62,9 +64,9 @@ namespace ProjetoFutebol.Aplicacao.Servicos
 
                 return competicoes.Count;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Erro ao sincronizar competições.");
                 throw;
             }
         }
@@ -78,11 +80,16 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                 if (timesDto?.teams == null || !timesDto.teams.Any())
                     return 0;
 
-                return default(int);
-            }
-            catch (Exception)
-            {
+                List<Equipe> equipes = await _equipeService.ConverterTimes(timesDto);
 
+                await _equipeService.AdicionarEmLoteAsync(equipes);
+                await _unitOfWork.CommitAsync();
+
+                return equipes.Count;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao sincronizar times.");
                 throw;
             }
         }

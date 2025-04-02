@@ -45,5 +45,20 @@ namespace ProjetoFutebol.WebAPI.Controllers
                 return StatusCode(500, "Erro interno no servidor.");
             }
         }
+
+        [HttpPost("sincronizar-times-por-competicao")]
+        public async Task<IActionResult> SincronizarTimesPorCompeticoes(string codigoCompeticao)
+        {
+            try
+            {
+                int total = await _sincronizacaoService.SincronizarTimesPorCompeticao(codigoCompeticao);
+                return Ok(new { mensagem = "Times sincronizados com sucesso!", total });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao sincronizar países.");
+                return StatusCode(500, "Erro interno no servidor.");
+            }
+        }
     }
 }

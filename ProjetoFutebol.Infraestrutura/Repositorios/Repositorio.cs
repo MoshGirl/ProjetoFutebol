@@ -67,6 +67,11 @@ namespace ProjetoFutebol.Infraestrutura.Repositorios
             return await _context.Set<T>().FindAsync(id);
         }
 
+        public async Task<T?> ObterPorCodigoAsync(string codigo)
+        {
+            return await _context.Set<T>().FindAsync(codigo);
+        }
+
         public async Task<IEnumerable<T>> ObterTodosAsync()
         {
             return await _context.Set<T>().ToListAsync();
