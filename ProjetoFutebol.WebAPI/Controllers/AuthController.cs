@@ -40,7 +40,7 @@ namespace ProjetoFutebol.WebAPI.Controllers
                 return Unauthorized(new { mensagem = "Credenciais inválidas." });
 
             var token = await _authService.GerarTokenAsync(usuario);
-            return Ok(new { token });
+            return Ok(new { token = token.ToString() });
         }
 
         [HttpPost("refresh-token")]

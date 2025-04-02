@@ -11,7 +11,7 @@ namespace ProjetoFutebol.Dominio.Entidades
             SenhaHash = senhaHash;
         }
 
-        public Guid UsuarioID { get; set; }
+        public int UsuarioID { get; set; }
 
         [Required]
         [MaxLength(100)]

@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoFutebol.Dominio.Interfaces;
 
 namespace ProjetoFutebol.WebAPI.Controllers
 {
     [Route("api/SincronizacaoFutebol")]
     [ApiController]
+    [Authorize]
     public class SincronizarDadosFutebolController : ControllerBase
     {
         private readonly ISincronizarDadosFutebolService _sincronizacaoService;
