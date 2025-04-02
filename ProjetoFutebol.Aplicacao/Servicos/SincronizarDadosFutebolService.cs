@@ -12,10 +12,11 @@ namespace ProjetoFutebol.Aplicacao.Servicos
         private readonly IPaisService _paisService;
         private readonly ICompeticaoService _competicaoService;
         private readonly IEquipeService _equipeService;
+        private readonly IPartidaService _partidaService;
         private readonly ILogger<SincronizarDadosFutebolService> _logger;
         private readonly IUnitOfWork _unitOfWork;
 
-        public SincronizarDadosFutebolService(IApiFutebolService apiFutebolService, IPaisService paisService, ILogger<SincronizarDadosFutebolService> logger, IUnitOfWork unitOfWork, ICompeticaoService competicaoService, IEquipeService equipeService)
+        public SincronizarDadosFutebolService(IApiFutebolService apiFutebolService, IPaisService paisService, ILogger<SincronizarDadosFutebolService> logger, IUnitOfWork unitOfWork, ICompeticaoService competicaoService, IEquipeService equipeService, IPartidaService partidaService)
         {
             _apiFutebolService = apiFutebolService;
             _paisService = paisService;
@@ -23,6 +24,7 @@ namespace ProjetoFutebol.Aplicacao.Servicos
             _unitOfWork = unitOfWork;
             _competicaoService = competicaoService;
             _equipeService = equipeService;
+            _partidaService = partidaService;
         }
 
         public async Task<int> SincronizarPaisesAsync()
@@ -92,6 +94,30 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                 _logger.LogError(ex, "Erro ao sincronizar times.");
                 throw;
             }
+        }
+
+        public async Task<int> SincronizarPartidasPorCompeticoes(string codigoCompeticao)
+        {
+            try
+            {
+                var partidasDto = await _apiFutebolService.ObterDadosAsync<PartidaCompeticaoDTO>("competitions", codigoCompeticao + "/matches");
+
+                if (partidasDto?.matches == null || !partidasDto.matches.Any())
+                    return 0;
+
+                List<Partida> partidas = await _partidaService.ConverterPartidas(partidasDto, codigoCompeticao);
+
+                await _partidaService.AdicionarEmLoteAsync(partidas);
+                await _unitOfWork.CommitAsync();
+
+                return partidas.Count;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao sincronizar partidas.");
+                throw;
+            }
+            
         }
     }
 }

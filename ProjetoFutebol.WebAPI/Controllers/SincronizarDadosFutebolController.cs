@@ -22,7 +22,11 @@ namespace ProjetoFutebol.WebAPI.Controllers
             try
             {
                 int total = await _sincronizacaoService.SincronizarPaisesAsync();
-                return Ok(new { mensagem = "Paises sincronizados com sucesso!", total });
+
+                if (total == 0)
+                    return NotFound(new { mensagem = "Não foram encontrados novos paises para sincronização" });
+                else
+                    return Ok(new { mensagem = "Paises sincronizados com sucesso!", total });
             }
             catch (Exception ex)
             {
@@ -37,7 +41,11 @@ namespace ProjetoFutebol.WebAPI.Controllers
             try
             {
                 int total = await _sincronizacaoService.SincronizarCompeticaoPorPaises();
-                return Ok(new { mensagem = "Competições sincronizados com sucesso!", total });
+
+                if (total == 0)
+                    return NotFound(new { mensagem = "Não foram encontrados novas competições para sincronização" });
+                else
+                    return Ok(new { mensagem = "Competições sincronizados com sucesso!", total });
             }
             catch (Exception ex)
             {
@@ -52,11 +60,34 @@ namespace ProjetoFutebol.WebAPI.Controllers
             try
             {
                 int total = await _sincronizacaoService.SincronizarTimesPorCompeticao(codigoCompeticao);
-                return Ok(new { mensagem = "Times sincronizados com sucesso!", total });
+
+                if (total == 0)
+                    return NotFound(new { mensagem = "Não foram encontrados novos times/competições para sincronização" });
+                else
+                    return Ok(new { mensagem = "Times sincronizados com sucesso!", total });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro ao sincronizar países.");
+                return StatusCode(500, "Erro interno no servidor.");
+            }
+        }
+
+        [HttpPost("sincronizar-partidas-por-competicao")]
+        public async Task<IActionResult> SincronizarPartidasPorCompeticoes(string codigoCompeticao)
+        {
+            try
+            {
+                int total = await _sincronizacaoService.SincronizarPartidasPorCompeticoes(codigoCompeticao);
+
+                if (total == 0)
+                    return NotFound(new { mensagem = "Não foram encontrados novos times para sincronização" });
+                else
+                    return Ok(new { mensagem = "Times sincronizados com sucesso!", total });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao sincronizar partidas.");
                 return StatusCode(500, "Erro interno no servidor.");
             }
         }
