@@ -2,11 +2,6 @@
 using ProjetoFutebol.Dominio.Entidades;
 using ProjetoFutebol.Dominio.Interfaces;
 using ProjetoFutebol.Dominio.Interfaces.EntidadesInterface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjetoFutebol.Aplicacao.Servicos.EntidadesService
 {
@@ -71,5 +66,17 @@ namespace ProjetoFutebol.Aplicacao.Servicos.EntidadesService
 
         private static string ObterTemporada(string startDate, string endDate) =>
             $"{DateTime.Parse(startDate).Year}/{DateTime.Parse(endDate).Year}";
+
+        public List<Competicao> RemoverCompeticoesRepetidas(List<Competicao> competicoes)
+        {
+            if (competicoes == null || !competicoes.Any())
+                return new List<Competicao>();
+
+            var competicoesCadastradas = _repositorioCompeticao.ObterTodosAsync().Result.Select(x => x.Codigo);
+
+            var competicoesFiltradas = competicoes.Where(c => !competicoesCadastradas.Contains(c.Codigo)).ToList();
+
+            return competicoesFiltradas;
+        }
     }
 }

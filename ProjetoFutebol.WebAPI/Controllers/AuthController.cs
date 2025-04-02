@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjetoFutebol.Dominio.DTOs;
 using ProjetoFutebol.Dominio.Entidades;
 using ProjetoFutebol.Dominio.Interfaces;
 
@@ -32,9 +33,9 @@ namespace ProjetoFutebol.WebAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(string email, string senha)
+        public async Task<IActionResult> Login([FromBody] LoginDTO model)
         {
-            var usuario = await _authService.AutenticarUsuarioAsync(email, senha);
+            var usuario = await _authService.AutenticarUsuarioAsync(model.Email, model.Senha);
 
             if (usuario == null)
                 return Unauthorized(new { mensagem = "Credenciais inválidas." });

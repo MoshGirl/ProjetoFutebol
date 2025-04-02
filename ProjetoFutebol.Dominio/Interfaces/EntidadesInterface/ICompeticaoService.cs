@@ -7,5 +7,6 @@ namespace ProjetoFutebol.Dominio.Interfaces.EntidadesInterface
     {
         Task<List<Competicao>> ConverterCompeticoes(CompeticoesDTO competicoesDto);
         Task AdicionarEmLoteAsync(List<Competicao> competicoes);
+        List<Competicao> RemoverCompeticoesRepetidas(List<Competicao> competicoes);
     }
 }

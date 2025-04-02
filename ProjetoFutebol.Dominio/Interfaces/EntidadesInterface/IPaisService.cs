@@ -7,5 +7,6 @@ namespace ProjetoFutebol.Dominio.Interfaces.EntidadesInterface
     {
         Task AdicionarEmLoteAsync(List<Pais> paises);
         List<Pais> ConverterAreasParaPaises(AreasDTO areasDto);
+        List<Pais>? RemoverPaisesRepetidos(List<Pais> paises);
     }
 }

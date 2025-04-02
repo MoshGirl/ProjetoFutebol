@@ -38,5 +38,17 @@ namespace ProjetoFutebol.Aplicacao.Servicos.EntidadesService
                     CodigoPais = a.countryCode
                 }).ToList();
         }
+
+        public List<Pais>? RemoverPaisesRepetidos(List<Pais> paises)
+        {
+            if (paises == null || !paises.Any())
+                return new List<Pais>();
+
+            var codigosCadastrados = _repositorioPais.ObterTodosAsync().Result.Select(x => x.CodigoPais);
+
+            var paisesFiltrados = paises.Where(p => !codigosCadastrados.Contains(p.CodigoPais)).ToList();
+
+            return paisesFiltrados;
+        }
     }
 }

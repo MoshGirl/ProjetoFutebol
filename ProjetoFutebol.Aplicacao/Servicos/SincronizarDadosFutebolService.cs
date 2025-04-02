@@ -37,11 +37,17 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                     return 0;
 
                 var paises = _paisService.ConverterAreasParaPaises(areasDto);
+                List<Pais>? paisesNovos = _paisService.RemoverPaisesRepetidos(paises);
 
-                await _paisService.AdicionarEmLoteAsync(paises);
-                await _unitOfWork.CommitAsync();
+                if(paisesNovos != null || paisesNovos.Count == 0)
+                {
+                    await _paisService.AdicionarEmLoteAsync(paisesNovos);
+                    await _unitOfWork.CommitAsync();
 
-                return paises.Count;
+                    return paisesNovos.Count;
+                }
+
+                return 0;                
             }
             catch (Exception ex)
             {
@@ -60,11 +66,17 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                     return 0;
 
                 List<Competicao> competicoes = await _competicaoService.ConverterCompeticoes(competicoesDto);
+                List<Competicao> novasCompeticoes = _competicaoService.RemoverCompeticoesRepetidas(competicoes);
 
-                await _competicaoService.AdicionarEmLoteAsync(competicoes);
-                await _unitOfWork.CommitAsync();
+                if(novasCompeticoes != null | novasCompeticoes.Count == 0)
+                {
+                    await _competicaoService.AdicionarEmLoteAsync(competicoes);
+                    await _unitOfWork.CommitAsync();
 
-                return competicoes.Count;
+                    return competicoes.Count;
+                }
+
+                return 0;
             }
             catch (Exception ex)
             {

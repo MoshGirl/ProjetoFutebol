@@ -40,7 +40,7 @@ namespace ProjetoFutebol.Infraestrutura.Repositorios
             if (idProperty == null)
                 throw new InvalidOperationException($"A entidade {typeof(T).Name} não possui uma propriedade de ID.");
 
-            var ids = entidades.Select(e => idProperty.GetValue(e)).ToList();
+            var ids = entidades.Select(e => idProperty.GetValue(e)).Where(id => id != null).ToList();
 
             var idsExistentes = await set
                 .Where(e => ids.Contains(EF.Property<object>(e, idProperty.Name)))
