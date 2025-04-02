@@ -82,13 +82,7 @@
             public HomeTeam homeTeam { get; set; }
             public AwayTeam awayTeam { get; set; }
             public Score score { get; set; }
-            public Odds odds { get; set; }
             public List<Referee> referees { get; set; }
-        }
-
-        public class Odds
-        {
-            public string msg { get; set; }
         }
 
         public class Penalties

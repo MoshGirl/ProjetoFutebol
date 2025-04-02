@@ -18,7 +18,7 @@ namespace ProjetoFutebol.WebAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet("Areas")]
+        [HttpGet("areas")]
         public async Task<IActionResult> ObterAreas()
         {
             try
@@ -33,7 +33,7 @@ namespace ProjetoFutebol.WebAPI.Controllers
             }
         }
 
-        [HttpGet("Competicoes")]
+        [HttpGet("competicoes")]
         public async Task<IActionResult> ObterCompeticoes()
         {
             try
@@ -48,7 +48,7 @@ namespace ProjetoFutebol.WebAPI.Controllers
             }
         }
 
-        [HttpGet("PartidasHoje")]
+        [HttpGet("partidas-hoje")]
         public async Task<IActionResult> ObterPartidasDeHoje()
         {
             try
@@ -63,12 +63,42 @@ namespace ProjetoFutebol.WebAPI.Controllers
             }
         }
 
-        [HttpGet("CompeticaoEspecifica")]
+        [HttpGet("competicao-especifica")]
         public async Task<IActionResult> ObterCompeticaoEspecifica(string codigoCompeticao)
         {
             try
             {
-                var data = await _apiFutebolService.ObterDadosAsync<CompeticaoEspecificaDTO>("matches", codigoCompeticao);
+                var data = await _apiFutebolService.ObterDadosAsync<CompeticaoEspecificaDTO>("competitions", codigoCompeticao);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter partidas.");
+                return StatusCode(500, "Erro interno no servidor.");
+            }
+        }
+
+        [HttpGet("time-especifico")]
+        public async Task<IActionResult> ObterTimeEspecifico(string codigoTime)
+        {
+            try
+            {
+                var data = await _apiFutebolService.ObterDadosAsync<TimeEspecificoDTO>("teams", codigoTime);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao obter partidas.");
+                return StatusCode(500, "Erro interno no servidor.");
+            }
+        }
+
+        [HttpGet("times-competicao")]
+        public async Task<IActionResult> ObterTimesPorCompeticao(string codigoCompeticao)
+        {
+            try
+            {
+                var data = await _apiFutebolService.ObterDadosAsync<TimesCompeticaoDTO>("competitions", codigoCompeticao + "/teams");
                 return Ok(data);
             }
             catch (Exception ex)
