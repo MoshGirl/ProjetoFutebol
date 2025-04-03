@@ -41,7 +41,6 @@ namespace ProjetoFutebol.WebAPI.Properties
 
             // Injeção de Dependência
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddApplicationServices(Assembly.GetExecutingAssembly());
             services.AddApplicationServices();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
