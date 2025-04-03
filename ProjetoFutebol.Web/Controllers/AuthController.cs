@@ -4,16 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using ProjetoFutebol.Web.ViewModels;
 using ProjetoFutebol.Web.Services;
 using System.Security.Claims;
+using System.Net.Http;
+using ProjetoFutebol.Web.Interfaces;
 
 namespace ProjetoFutebol.Web.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
+        private readonly HttpClient _httpClient;
 
-        public AuthController(AuthService authService)
+        public AuthController(IAuthService authService, IHttpClientFactory httpClientFactory)
         {
             _authService = authService;
+            _httpClient = httpClientFactory.CreateClient("ProjetoFutebolApi");
         }
 
         public IActionResult Index()
@@ -34,7 +38,7 @@ namespace ProjetoFutebol.Web.Controllers
                 return View("Index", model);
             }
 
-            bool loginValido = await _authService.AutenticarUsuario(model.Email, model.Senha);
+            bool loginValido = await _authService.AutenticarUsuario(model);
 
             if (!loginValido)
             {
