@@ -35,13 +35,13 @@ namespace ProjetoFutebol.Web.Controllers
                 if (cadastroValido.Status != 200)
                     ModelState.AddModelError("Email", "Usuário ou senha inválidos");
 
-                var (claimsIdentity, authProperties) = await _authService.ConfigurarCookies(model.Email);
+                TempData["Sucesso"] = "Usuário cadastrado com sucesso! Faça login para continuar.";
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Auth");
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "Ocorreu um erro ao processar seu cadastro.");
+                TempData["Erro"] = $"Erro ao cadastrar: {ex.Message}";
                 return View("Index", model);
             }
         }

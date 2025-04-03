@@ -22,17 +22,25 @@ namespace ProjetoFutebol.Web.Services
 
         public async Task<bool> AutenticarUsuario(AuthViewModel model)
         {
-            var loginData = new { Email = model.Email, Senha = model.Senha };
-
-            var response = await _apiService.PostAsync<LoginResponse>("auth/login", loginData);
-
-            if (response != null)
+            try
             {
-                var session = _httpContextAccessor.HttpContext?.Session;
-                session?.SetString("AuthToken", response.Token);
-                return true;
+                var loginData = new { Email = model.Email, Senha = model.Senha };
+
+                var response = await _apiService.PostAsync<LoginResponse>("auth/login", loginData);
+
+                if (response != null)
+                {
+                    var session = _httpContextAccessor.HttpContext?.Session;
+                    session?.SetString("AuthToken", response.Token);
+                    return true;
+                }
+
+                return false;
             }
-            return false;
+            catch (Exception ex)
+            {
+                return false;
+            }            
         }
 
         public async Task<(ClaimsIdentity? claimsIdentity, AuthenticationProperties? authProperties)> ConfigurarCookies(string email)

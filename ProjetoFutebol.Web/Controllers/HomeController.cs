@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjetoFutebol.Web.Interfaces;
 using ProjetoFutebol.Web.Models;
 using System.Diagnostics;
 
@@ -9,15 +10,18 @@ namespace ProjetoFutebol.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IPartidaService _partidaService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IPartidaService partidaService)
         {
             _logger = logger;
+            _partidaService = partidaService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var partidas = await _partidaService.ObterPartidasDeHojeAsync();
+            return View(partidas);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

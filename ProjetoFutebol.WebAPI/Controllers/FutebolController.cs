@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoFutebol.Aplicacao.Servicos;
 using ProjetoFutebol.Dominio.DTOs;
 using ProjetoFutebol.Dominio.Interfaces;

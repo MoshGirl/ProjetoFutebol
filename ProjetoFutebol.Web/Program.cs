@@ -27,6 +27,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IApiService, ApiService>();
 builder.Services.AddScoped<ICadastroService, CadastroService>();
+builder.Services.AddScoped<IPartidaService, PartidaService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 

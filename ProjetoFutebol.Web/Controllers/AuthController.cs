@@ -40,9 +40,11 @@ namespace ProjetoFutebol.Web.Controllers
 
             if (!loginValido)
             {
-                ModelState.AddModelError("Email", "Usuário ou senha inválidos");
+                ModelState.AddModelError("Senha", "Usuário ou senha inválidos");
                 return View("Index", model);
             }
+
+            var tokenSalvo = HttpContext.Session.GetString("AuthToken");
 
             var (claimsIdentity, authProperties) = await _authService.ConfigurarCookies(model.Email);
 
