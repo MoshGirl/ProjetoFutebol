@@ -8,6 +8,7 @@
         public string TipoCompeticao { get; set; }
         public string Temporada { get; set; }
         public int PaisID { get; set; }
+        public string? Emblema { get; set; }
 
         public virtual Pais Pais { get; set; }
         public virtual ICollection<EquipeCompeticao> EquipesCompeticao { get; set; } = new List<EquipeCompeticao>();

@@ -20,6 +20,8 @@ namespace ProjetoFutebol.Infraestrutura.Mappings
                    .HasMaxLength(10)
                    .IsRequired();
 
+            builder.Property(c => c.Emblema);
+
             builder.HasOne(c => c.Pais)
                    .WithMany(p => p.Competicoes)
                    .HasForeignKey(c => c.PaisID)
