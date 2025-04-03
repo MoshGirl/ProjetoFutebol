@@ -1,0 +1,34 @@
+﻿@model ProjetoFutebol.Web.ViewModels.CadastroViewModel
+
+@{
+    ViewData["Title"] = "Cadastre no FutFut";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2>Cadastro</h2>
+    <form asp-action="Cadastro" method="post">
+        <div class="mb-3">
+            <label asp-for="Nome" class="form-label"></label>
+            <input asp-for="Nome" class="form-control" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" type="email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Senha" class="form-label"></label>
+            <input asp-for="Senha" type="password" class="form-control" />
+            <span asp-validation-for="Senha" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="ConfirmarSenha" class="form-label"></label>
+            <input asp-for="ConfirmarSenha" type="password" class="form-control" />
+            <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+        </div>
+        <p>Já tem uma conta? <a asp-controller="Auth" asp-action="Index">Faça login aqui</a></p>
+        <button type="submit" class="btn btn-success">Cadastrar</button>
+    </form>
+</div>

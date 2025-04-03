@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using ProjetoFutebol.Web.Interfaces;
+using ProjetoFutebol.Web.Response;
 using ProjetoFutebol.Web.ViewModels;
 using System.Security.Claims;
 using System.Text;
@@ -10,59 +11,35 @@ namespace ProjetoFutebol.Web.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IApiService _apiService;
 
-        public AuthService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
+        public AuthService(IHttpContextAccessor httpContextAccessor, IApiService apiService)
         {
-            _httpClient = httpClient;
             _httpContextAccessor = httpContextAccessor;
+            _apiService = apiService;
         }
 
         public async Task<bool> AutenticarUsuario(AuthViewModel model)
         {
             var loginData = new { Email = model.Email, Senha = model.Senha };
 
-            var content = new StringContent(JsonSerializer.Serialize(loginData), Encoding.UTF8, "application/json");
+            var response = await _apiService.PostAsync<LoginResponse>("auth/login", loginData);
 
-            var response = await _httpClient.PostAsJsonAsync("auth/login", model);
-
-            if (!response.IsSuccessStatusCode)
-                return false;
-
-            var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-            if (result != null)
+            if (response != null)
             {
                 var session = _httpContextAccessor.HttpContext?.Session;
-                session?.SetString("AuthToken", result.Token);
+                session?.SetString("AuthToken", response.Token);
                 return true;
             }
             return false;
         }
 
-        public async Task<bool> CadastrarAsync(CadastroViewModel model)
-        {
-            var response = await _httpClient.PostAsJsonAsync("api/auth/registrar", model);
-            return response.IsSuccessStatusCode;
-        }
-
-        public void Logout()
-        {
-            var session = _httpContextAccessor.HttpContext?.Session;
-            session?.Remove("AuthToken");
-        }
-
-        public class LoginResponse
-        {
-            public string Token { get; set; }
-        }
-
-        public async Task<(ClaimsIdentity? claimsIdentity, AuthenticationProperties? authProperties)> ConfigurarCookies(AuthViewModel model)
+        public async Task<(ClaimsIdentity? claimsIdentity, AuthenticationProperties? authProperties)> ConfigurarCookies(string email)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, "Admin"),
-                new Claim(ClaimTypes.Email, model.Email)
+                new Claim(ClaimTypes.Email, email)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

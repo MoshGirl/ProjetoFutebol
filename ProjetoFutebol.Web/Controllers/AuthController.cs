@@ -12,12 +12,10 @@ namespace ProjetoFutebol.Web.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        private readonly HttpClient _httpClient;
 
-        public AuthController(IAuthService authService, IHttpClientFactory httpClientFactory)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _httpClient = httpClientFactory.CreateClient("ProjetoFutebolApi");
         }
 
         public IActionResult Index()
@@ -46,7 +44,7 @@ namespace ProjetoFutebol.Web.Controllers
                 return View("Index", model);
             }
 
-            var (claimsIdentity, authProperties) = await _authService.ConfigurarCookies(model);
+            var (claimsIdentity, authProperties) = await _authService.ConfigurarCookies(model.Email);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 

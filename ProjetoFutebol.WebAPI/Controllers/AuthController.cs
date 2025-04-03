@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoFutebol.Dominio.DTOs;
 using ProjetoFutebol.Dominio.Entidades;
 using ProjetoFutebol.Dominio.Interfaces;
@@ -19,12 +20,12 @@ namespace ProjetoFutebol.WebAPI.Controllers
         }
 
         [HttpPost("registrar")]
-        public async Task<IActionResult> Registrar([FromBody] Usuario usuarioDto)
+        public async Task<IActionResult> Registrar([FromBody] CadastroDTO usuarioDto)
         {
             try
             {
                 var usuario = await _authService.RegistrarUsuarioAsync(usuarioDto.Nome, usuarioDto.Email, usuarioDto.SenhaHash);
-                return Ok(new { mensagem = "Usuário registrado com sucesso!", usuario.Email });
+                return Ok(new { mensagem = "Usuário registrado com sucesso!", email = usuario.Email, status = 200 });
             }
             catch (Exception ex)
             {

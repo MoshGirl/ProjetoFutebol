@@ -25,11 +25,13 @@ builder.Services.AddSession(options =>
 
 // Injeção de Dependências
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IApiService, ApiService>();
+builder.Services.AddScoped<ICadastroService, CadastroService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllersWithViews();
 
 // Configuração do HttpClient
-builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+builder.Services.AddHttpClient<IApiService, ApiService>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7015/api/");
 });
