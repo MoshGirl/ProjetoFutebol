@@ -78,6 +78,6 @@ namespace ProjetoFutebol.Aplicacao.Servicos.EntidadesService
         }
 
         private static bool ValidarPartida(PartidaCompeticaoDTO.Match partidaDTO, Equipe? equipeCasa, Equipe? equipeVisitante) =>
-            partidaDTO.utcDate != null || equipeCasa != null || equipeVisitante != null;
+            partidaDTO.utcDate != null && equipeCasa != null && equipeVisitante != null;
     }
 }

@@ -39,7 +39,7 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                 var paises = _paisService.ConverterAreasParaPaises(areasDto);
                 List<Pais>? paisesNovos = _paisService.RemoverPaisesRepetidos(paises);
 
-                if(paisesNovos != null || paisesNovos.Count == 0)
+                if(paisesNovos != null && paisesNovos.Count > 0)
                 {
                     await _paisService.AdicionarEmLoteAsync(paisesNovos);
                     await _unitOfWork.CommitAsync();
@@ -68,7 +68,7 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                 List<Competicao> competicoes = await _competicaoService.ConverterCompeticoes(competicoesDto);
                 List<Competicao> novasCompeticoes = _competicaoService.RemoverCompeticoesRepetidas(competicoes);
 
-                if(novasCompeticoes != null | novasCompeticoes.Count == 0)
+                if(novasCompeticoes != null | novasCompeticoes.Count > 0)
                 {
                     await _competicaoService.AdicionarEmLoteAsync(competicoes);
                     await _unitOfWork.CommitAsync();
