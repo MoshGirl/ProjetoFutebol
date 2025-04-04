@@ -37,7 +37,7 @@ namespace ProjetoFutebol.Aplicacao.Servicos
             return HashSenha(senha) == senhaHash;
         }
 
-        public async Task<(string token, string refreshToken)> GerarTokenAsync(Usuario usuario)
+        public async Task<string> GerarTokenAsync(Usuario usuario)
         {
             var chaveSecreta = _config["Jwt:SecretKey"];
             var chave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(chaveSecreta));
@@ -58,13 +58,13 @@ namespace ProjetoFutebol.Aplicacao.Servicos
                 signingCredentials: credenciais);
 
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-            var refreshToken = GerarRefreshToken();
+            //var refreshToken = GerarRefreshToken();
 
-            usuario.AtualizaRefreshToken(refreshToken, 7);
+            //usuario.AtualizaRefreshToken(refreshToken, 7);
             await _usuarioRepository.AtualizarAsync(usuario);
             await _unitOfWork.CommitAsync();
 
-            return (jwtToken, refreshToken);
+            return (jwtToken);
         }
 
         public async Task<Usuario> RegistrarUsuarioAsync(string nome, string email, string senha)

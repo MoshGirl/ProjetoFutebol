@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjetoFutebol.Aplicacao.Servicos;
 using ProjetoFutebol.Dominio.DTOs;
+using ProjetoFutebol.Dominio.Entidades;
 using ProjetoFutebol.Dominio.Interfaces;
+using ProjetoFutebol.Dominio.Interfaces.EntidadesInterface;
 
 namespace ProjetoFutebol.WebAPI.Controllers
 {
@@ -11,12 +13,14 @@ namespace ProjetoFutebol.WebAPI.Controllers
     public class FutebolController : ControllerBase
     {
         private readonly IApiFutebolService _apiFutebolService;
+        private readonly IRepository<Competicao> _repositoryCompeticao;
         private readonly ILogger<FutebolController> _logger;
 
-        public FutebolController(ApiFutebolService apiFutebolService, ILogger<FutebolController> logger)
+        public FutebolController(ApiFutebolService apiFutebolService, ILogger<FutebolController> logger, IRepository<Competicao> repositoryCompeticao)
         {
             _apiFutebolService = apiFutebolService;
             _logger = logger;
+            _repositoryCompeticao = repositoryCompeticao;
         }
 
         [HttpGet("areas")]
@@ -39,7 +43,8 @@ namespace ProjetoFutebol.WebAPI.Controllers
         {
             try
             {
-                var data = await _apiFutebolService.ObterDadosAsync<CompeticoesDTO>("competitions");
+                var data = await _repositoryCompeticao.ObterTodosAsync();
+                //var data = await _apiFutebolService.ObterDadosAsync<CompeticoesDTO>("competitions");
                 return Ok(data);
             }
             catch (Exception ex)

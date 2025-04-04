@@ -45,19 +45,19 @@ namespace ProjetoFutebol.WebAPI.Controllers
             return Ok(new { token = token.ToString() });
         }
 
-        [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
-        {
-            var usuario = (await _usuarioRepository.BuscarAsync(u => u.RefreshToken == request.RefreshToken)).FirstOrDefault();
+        //[HttpPost("refresh-token")]
+        //public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        //{
+        //    var usuario = (await _usuarioRepository.BuscarAsync(u => u.RefreshToken == request.RefreshToken)).FirstOrDefault();
 
-            if (usuario == null || usuario.RefreshTokenExpiracao < DateTime.UtcNow)
-            {
-                return Unauthorized("Refresh Token inválido ou expirado.");
-            }
+        //    if (usuario == null || usuario.RefreshTokenExpiracao < DateTime.UtcNow)
+        //    {
+        //        return Unauthorized("Refresh Token inválido ou expirado.");
+        //    }
 
-            var (novoToken, novoRefreshToken) = await _authService.GerarTokenAsync(usuario);
+        //    var (novoToken, novoRefreshToken) = await _authService.GerarTokenAsync(usuario);
 
-            return Ok(new { token = novoToken, refreshToken = novoRefreshToken });
-        }
+        //    return Ok(new { token = novoToken, refreshToken = novoRefreshToken });
+        //}
     }
 }
