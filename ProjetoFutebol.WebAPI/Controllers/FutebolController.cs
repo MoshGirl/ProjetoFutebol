@@ -9,7 +9,6 @@ namespace ProjetoFutebol.WebAPI.Controllers
 {
     [Route("api/Futebol")]
     [ApiController]
-    [Authorize]
     public class FutebolController : ControllerBase
     {
         private readonly IApiFutebolService _apiFutebolService;

@@ -2,9 +2,14 @@
 {
     public class CampeonatoViewModel
     {
-        public int CampeonatoID { get; set; }
-        public string Nome { get; set; }
-        public string Emblema { get; set; }
-        public List<PartidaViewModel> Partidas { get; set; } = new();
+        public int CompeticaoID { get; set; }
+        public string NomeCompeticao { get; set; } = string.Empty;
+        public string Codigo { get; set; } = string.Empty;
+        public string TipoCompeticao { get; set; } = string.Empty;
+        public string Temporada { get; set; } = string.Empty;
+        public int PaisID { get; set; }
+        public string Emblema { get; set; } = string.Empty;
+
+        public List<EquipeViewModel> Equipes { get; set; } = new();
     }
 }

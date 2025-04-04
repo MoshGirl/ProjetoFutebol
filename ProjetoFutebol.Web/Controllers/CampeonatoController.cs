@@ -13,9 +13,9 @@ namespace ProjetoFutebol.Web.Controllers
             _campeonatoService = campeonatoService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model = _campeonatoService.ObterCampeonatosComPartidasAsync();
+            var model = await _campeonatoService.ObterCampeonatosComPartidasAsync();
             return View(model);
         }
     }

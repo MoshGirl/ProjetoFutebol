@@ -20,8 +20,16 @@ namespace ProjetoFutebol.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var partidas = await _partidaService.ObterPartidasDeHojeAsync();
-            return View(partidas);
+            try
+            {
+                var partidas = await _partidaService.ObterPartidasDeHojeAsync();
+                return View(partidas);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }            
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

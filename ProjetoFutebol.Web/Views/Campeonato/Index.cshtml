@@ -12,8 +12,8 @@
         @for (int i = 0; i < Model.Count; i++)
         {
             var campeonato = Model[i];
-            var headingId = $"heading-{campeonato.CampeonatoID}";
-            var collapseId = $"collapse-{campeonato.CampeonatoID}";
+            var headingId = $"heading-{campeonato.CompeticaoID}";
+            var collapseId = $"collapse-{campeonato.CompeticaoID}";
 
             <div class="accordion-item">
                 <h2 class="accordion-header" id="@headingId">
@@ -23,32 +23,28 @@
                             data-bs-target="#@collapseId"
                             aria-expanded="false"
                             aria-controls="@collapseId">
-                        <span>@Html.DisplayFor(m => campeonato.Nome)</span>
-                        <img src="@Html.Encode(campeonato.Emblema)" alt="Emblema @Html.DisplayFor(m => campeonato.Nome)" width="30" class="ms-auto">
+                        <span>@campeonato.NomeCompeticao</span>
+                        <img src="@campeonato.Emblema" alt="Emblema @campeonato.NomeCompeticao" width="30" class="ms-auto">
                     </button>
                 </h2>
                 <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headingId" data-bs-parent="#accordionCampeonatos">
                     <div class="accordion-body">
-                        <h5>Partidas</h5>
-                        @if (campeonato.Partidas?.Any() == true)
+                        <h5>Equipes</h5>
+                        @if (campeonato.Equipes?.Any() == true)
                         {
                             <ul class="list-group">
-                                @for (int j = 0; j < campeonato.Partidas.Count; j++)
+                                @foreach (var equipe in campeonato.Equipes)
                                 {
-                                    var partida = campeonato.Partidas[j];
                                     <li class="list-group-item d-flex align-items-center">
-                                        <img src="@Html.Encode(partida.EmblemaCasa)" alt="Emblema @partida.TimeCasa" width="30" class="me-2">
-                                        <strong>@Html.DisplayFor(model => partida.TimeCasa)</strong>
-                                        <span class="mx-2">@partida.PlacarCasa x @partida.PlacarFora</span>
-                                        <strong>@Html.DisplayFor(model => partida.TimeFora)</strong>
-                                        <img src="@Html.Encode(partida.EmblemaFora)" alt="Emblema @partida.TimeFora" width="30" class="ms-2">
+                                        <img src="@equipe.Escudo" alt="Escudo @equipe.NomeEquipe" width="30" class="me-2" />
+                                        <strong>@equipe.NomeEquipe (@equipe.Sigla)</strong>
                                     </li>
                                 }
                             </ul>
                         }
                         else
                         {
-                            <p>Não há partidas cadastradas para este campeonato.</p>
+                            <p>Não há equipes cadastradas para este campeonato.</p>
                         }
                     </div>
                 </div>
