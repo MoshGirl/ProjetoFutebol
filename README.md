@@ -10,7 +10,6 @@ Sistema Web para gerenciamento e exibição de dados de futebol, utilizando ASP.
 - **Migrations**
 - **Unit of Work**
 - **Repositórios Genéricos**
-- **AutoMapper**
 - **Arquitetura DDD (Domain-Driven Design)**
 - **Bootstrap 5**
 - **JavaScript Vanilla**
