@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjetoFutebol.Web.Interfaces;
-using ProjetoFutebol.Web.Models;
+using ProjetoFutebol.Web.ViewModels;
 using System.Diagnostics;
 
 namespace ProjetoFutebol.Web.Controllers

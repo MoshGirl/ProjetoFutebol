@@ -31,26 +31,34 @@ namespace ProjetoFutebol.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(AuthViewModel model)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View("Index", model);
-            //}
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View("Index", model);
+                }
 
-            //bool loginValido = await _authService.AutenticarUsuario(model);
+                bool loginValido = await _authService.AutenticarUsuario(model);
 
-            //if (!loginValido)
-            //{
-            //    ModelState.AddModelError("Senha", "Usuário ou senha inválidos");
-            //    return View("Index", model);
-            //}
+                if (!loginValido)
+                {
+                    ModelState.AddModelError("Senha", "Usuário ou senha inválidos");
+                    return View("Index", model);
+                }
 
-            //var tokenSalvo = HttpContext.Session.GetString("AuthToken");
+                var tokenSalvo = HttpContext.Session.GetString("AuthToken");
 
-            var (claimsIdentity, authProperties) = await _authService.ConfigurarCookies(model.Email);
+                var (claimsIdentity, authProperties) = await _authService.ConfigurarCookies(model.Email);
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
-            return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                TempData["Erro"] = $"Erro ao fazer login: {ex.Message}";
+                return RedirectToAction("Index");
+            }            
         }        
 
         [HttpPost]

@@ -1,4 +1,4 @@
-namespace ProjetoFutebol.Web.Models
+namespace ProjetoFutebol.Web.ViewModels
 {
     public class ErrorViewModel
     {
